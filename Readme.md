@@ -7,7 +7,14 @@
 - Docker installed on your laptop
 - Port 3000 available
 
-### Setup and Run
+### Option A: Use Pre-built Docker Image (Fastest) ⚡
+
+```bash
+# Run directly from Docker Hub
+docker run -p 3000:3000 moulee23/millennium-falcon-backend
+```
+
+### Option B: Build from Source 🔨
 
 1. **Clone the repository:**
 
@@ -28,17 +35,17 @@
    docker run -p 3000:3000 millennium-falcon-backend
    ```
 
-4. **Test the API:**
+### Test the API 🧪
 
-   ```bash
-   # Health check
-   curl http://localhost:3000/health
+```bash
+# Health check
+curl http://localhost:3000/health
 
-   # Route computation
-   curl -X POST http://localhost:3000/compute \
-     -H "Content-Type: application/json" \
-     -d '{"arrival": "Endor"}'
-   ```
+# Route computation
+curl -X POST http://localhost:3000/compute \
+  -H "Content-Type: application/json" \
+  -d '{"arrival": "Endor"}'
+```
 
 ## API Endpoints
 
