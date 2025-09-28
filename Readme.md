@@ -40,15 +40,6 @@
   - Request: `{"arrival": "Endor"}`
   - Response: `{"duration": 8, "route": ["Tatooine", "Hoth", "Endor"]}`
 
-## Technical Highlights
-
-- **TypeScript** with strict type checking
-- **Async/await** database operations (migrated from callback-based sqlite3)
-- **SQLite** database with Promise-based sqlite library
-- **Docker** containerization with security best practices
-- **Comprehensive testing** (133 tests passing)
-- **Clean architecture** with proper separation of concerns
-
 ## Available Planets
 
 - Tatooine (departure)
