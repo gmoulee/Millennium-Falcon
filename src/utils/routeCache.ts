@@ -57,17 +57,6 @@ export const loadRoutes = async (config: MillenniumFalconConfig): Promise<void> 
   }
 }
 
-export const getRoutes = (): Route[] => {
-  if (!isLoaded) {
-    throw new Error('Routes not loaded. Call loadRoutes() first.')
-  }
-  return cachedRoutes
-}
-
-export const isRoutesLoaded = (): boolean => isLoaded
-
-export const getRouteCount = (): number => cachedRoutes.length
-
 export const getRouteMap = (): Map<string, Map<string, number>> => {
   if (!isLoaded || !cachedRouteMap) {
     throw new Error('Routes not loaded. Call loadRoutes() first.')
