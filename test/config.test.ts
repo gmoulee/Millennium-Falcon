@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
+
 import { MillenniumFalconConfig } from '../src/types/routeTypes'
 import { getConfig, initializeConfig, loadConfig } from '../src/utils/config'
 
@@ -183,7 +184,7 @@ describe('Configuration', () => {
 
     it('Given no initialized config, When getting config, Then it should throw error', () => {
       // Reset global config
-      initializeConfig(null as any)
+      initializeConfig(null as unknown as MillenniumFalconConfig)
 
       expect(() => {
         getConfig()

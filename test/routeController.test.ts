@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
+
 import { computeRouteHandler } from '../src/controllers/routeController'
 import { computeRoute } from '../src/services/routeService'
+import { CustomError, validateComputeRequest } from '../src/utils/middleware'
 
 // Mock dependencies
 jest.mock('../src/services/routeService')
@@ -26,7 +28,6 @@ jest.mock('../src/utils/middleware', () => {
 })
 
 const mockComputeRoute = computeRoute as jest.MockedFunction<typeof computeRoute>
-const { validateComputeRequest } = require('../src/utils/middleware')
 const mockValidateComputeRequest = validateComputeRequest as jest.MockedFunction<
   typeof validateComputeRequest
 >
@@ -96,7 +97,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 400 status, When processing compute route, Then it should return 400 status', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Invalid request', 400)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -108,7 +108,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 400 status, When processing compute route, Then it should not call computeRoute', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Invalid request', 400)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -120,7 +119,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 400 status, When processing compute route, Then it should return error JSON', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Invalid request', 400)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -132,7 +130,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 404 status, When processing compute route, Then it should return 404 status', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Planet not found', 404)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -144,7 +141,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 404 status, When processing compute route, Then it should not call computeRoute', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Planet not found', 404)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -156,7 +152,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 404 status, When processing compute route, Then it should return error JSON', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Planet not found', 404)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -168,7 +163,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 500 status, When processing compute route, Then it should return 500 status', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Internal server error', 500)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -180,7 +174,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 500 status, When processing compute route, Then it should not call computeRoute', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Internal server error', 500)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError
@@ -192,7 +185,6 @@ describe('Route Controller', () => {
     })
 
     it('Given CustomError with 500 status, When processing compute route, Then it should return error JSON', () => {
-      const { CustomError } = require('../src/utils/middleware')
       const customError = new CustomError('Internal server error', 500)
       mockValidateComputeRequest.mockImplementation(() => {
         throw customError

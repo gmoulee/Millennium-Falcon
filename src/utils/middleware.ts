@@ -94,8 +94,7 @@ export const errorHandler = (
   const { statusCode = 500, message } = error
 
   // Log error for debugging
-  console.error(`Error ${statusCode}: ${message}`)
-  console.error(error.stack)
+  logger.error({ error: message, stack: error.stack, statusCode }, 'Request error')
 
   res.status(statusCode).json({
     error: {

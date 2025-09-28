@@ -1,4 +1,5 @@
-import { CustomError, createError, validateComputeRequest } from '../src/utils/middleware'
+import { ComputeRequest } from '../src/types/routeTypes'
+import { createError, CustomError, validateComputeRequest } from '../src/utils/middleware'
 
 // Mock the routeCache module
 jest.mock('../src/utils/routeCache', () => ({
@@ -97,7 +98,7 @@ describe('Middleware', () => {
     })
 
     it('Given a request with missing arrival field, When validating, Then it should throw error', () => {
-      const request = {} as any
+      const request = {} as unknown as ComputeRequest
 
       expect(() => {
         validateComputeRequest(request)
@@ -105,7 +106,7 @@ describe('Middleware', () => {
     })
 
     it('Given a request with invalid arrival type, When validating, Then it should throw error', () => {
-      const request = { arrival: 123 } as any
+      const request = { arrival: 123 } as unknown as ComputeRequest
 
       expect(() => {
         validateComputeRequest(request)
@@ -113,7 +114,7 @@ describe('Middleware', () => {
     })
 
     it('Given a request with empty arrival string, When validating, Then it should throw error', () => {
-      const request = { arrival: '' }
+      const request = { arrival: '' } as unknown as ComputeRequest
 
       expect(() => {
         validateComputeRequest(request)
@@ -121,7 +122,7 @@ describe('Middleware', () => {
     })
 
     it('Given a non-object request body, When validating, Then it should throw error', () => {
-      const request = 'invalid' as any
+      const request = 'invalid' as unknown as ComputeRequest
 
       expect(() => {
         validateComputeRequest(request)
@@ -129,7 +130,7 @@ describe('Middleware', () => {
     })
 
     it('Given a null request body, When validating, Then it should throw error', () => {
-      const request = null as any
+      const request = null as unknown as ComputeRequest
 
       expect(() => {
         validateComputeRequest(request)

@@ -1,10 +1,12 @@
+import { Application } from 'express'
 import request from 'supertest'
+
 import { createApp } from '../src/app'
 import { initializeConfig, loadConfig } from '../src/utils/config'
 import { loadRoutes } from '../src/utils/routeCache'
 
 describe('API Integration Tests', () => {
-  let app: any
+  let app: Application
 
   beforeAll(async () => {
     // Initialize config and cache for tests

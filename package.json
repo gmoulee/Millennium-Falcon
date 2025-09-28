@@ -1,6 +1,7 @@
 {
   "name": "millennium-falcon-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Backend service for computing optimal routes for the Millennium Falcon",
   "main": "dist/server.js",
   "scripts": {

@@ -10,6 +10,14 @@ import { requestLogger } from './utils/logger'
 import { errorHandler, notFoundHandler } from './utils/middleware'
 import { setupSwagger } from './utils/swagger'
 
+// Request body size limits
+const REQUEST_LIMITS = {
+  // JSON payloads should be small for this API (route computation requests)
+  JSON: '1mb',
+  // URL-encoded forms (if needed for file uploads, etc.)
+  URL_ENCODED: '5mb',
+} as const
+
 export const createApp = (): Application => {
   const app = express()
 
@@ -35,8 +43,8 @@ export const createApp = (): Application => {
   app.use(requestLogger)
 
   // Body parsing middleware
-  app.use(express.json({ limit: '10mb' }))
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+  app.use(express.json({ limit: REQUEST_LIMITS.JSON }))
+  app.use(express.urlencoded({ extended: true, limit: REQUEST_LIMITS.URL_ENCODED }))
 
   // API Documentation
   setupSwagger(app)

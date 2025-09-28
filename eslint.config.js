@@ -7,7 +7,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 export default [
   js.configs.recommended,
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
     languageOptions: {
       parser: typescriptParser,
       parserOptions: {

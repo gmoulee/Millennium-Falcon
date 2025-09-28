@@ -1,4 +1,5 @@
 import { Database, open } from 'sqlite'
+import sqlite3 from 'sqlite3'
 
 import { Route } from '../types/routeTypes'
 
@@ -6,7 +7,7 @@ export const createDatabase = async (dbPath: string): Promise<Database> => {
   try {
     return await open({
       filename: dbPath,
-      driver: require('sqlite3').Database,
+      driver: sqlite3.Database,
     })
   } catch (err) {
     throw new Error(
@@ -20,7 +21,7 @@ export const getAllRoutes = async (db: Database): Promise<readonly Route[]> => {
     const query = 'SELECT origin, destination, travel_time as travelTime FROM routes'
     const rows = await db.all(query)
 
-    return rows
+    return rows as Route[]
   } catch (err) {
     throw new Error(
       `Failed to fetch routes: ${err instanceof Error ? err.message : 'Unknown error'}`

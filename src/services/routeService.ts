@@ -114,8 +114,9 @@ export const findOptimalRoute = (
       }
     }
 
-    // Skip if we've already visited this planet with better fuel/time
-    const nodeKey = `${currentNode.planet}-${currentNode.fuelRemaining}`
+    // Skip if we've already visited this planet with better or equal fuel/time
+    // Include totalDays to avoid pruning routes that reach the same planet with fewer days
+    const nodeKey = `${currentNode.planet}-${currentNode.fuelRemaining}-${currentNode.totalDays}`
     if (visited.has(nodeKey)) {
       continue
     }
