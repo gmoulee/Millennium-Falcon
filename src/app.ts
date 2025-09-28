@@ -27,10 +27,21 @@ export const createApp = (): Application => {
   // CORS configuration
   app.use(
     cors({
-      origin:
-        process.env['NODE_ENV'] === 'production'
-          ? process.env['ALLOWED_ORIGINS']?.split(',') || false
-          : true,
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true)
+
+        const allowedOrigins = process.env['ALLOWED_ORIGINS']?.split(',') || [
+          'http://localhost:3001',
+          'http://127.0.0.1:3001',
+        ]
+
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
       credentials: true,
     })
   )
