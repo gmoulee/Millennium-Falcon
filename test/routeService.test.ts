@@ -314,9 +314,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given sufficient fuel and travel time, When calculating fuel after travel, Then it should reduce fuel by travel time', () => {
       const currentFuel = 10
       const travelTime = 3
-      const autonomy = 10
 
-      const result = calculateFuelAfterTravel(currentFuel, travelTime, autonomy)
+      const result = calculateFuelAfterTravel(currentFuel, travelTime)
 
       expect(result).toBe(7)
     })
@@ -324,9 +323,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given different fuel values, When calculating fuel after travel, Then it should reduce fuel by travel time', () => {
       const currentFuel = 5
       const travelTime = 2
-      const autonomy = 10
 
-      const result = calculateFuelAfterTravel(currentFuel, travelTime, autonomy)
+      const result = calculateFuelAfterTravel(currentFuel, travelTime)
 
       expect(result).toBe(3)
     })
@@ -334,9 +332,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given insufficient fuel, When calculating fuel after travel, Then it should not go below zero', () => {
       const currentFuel = 2
       const travelTime = 5
-      const autonomy = 10
 
-      const result = calculateFuelAfterTravel(currentFuel, travelTime, autonomy)
+      const result = calculateFuelAfterTravel(currentFuel, travelTime)
 
       expect(result).toBe(0)
     })
@@ -346,9 +343,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given insufficient fuel for travel, When checking if refueling is needed, Then it should return true', () => {
       const currentFuel = 3
       const travelTime = 5
-      const autonomy = 10
 
-      const result = needsRefueling(currentFuel, travelTime, autonomy)
+      const result = needsRefueling(currentFuel, travelTime)
 
       expect(result).toBe(true)
     })
@@ -356,9 +352,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given zero fuel, When checking if refueling is needed, Then it should return true', () => {
       const currentFuel = 0
       const travelTime = 1
-      const autonomy = 10
 
-      const result = needsRefueling(currentFuel, travelTime, autonomy)
+      const result = needsRefueling(currentFuel, travelTime)
 
       expect(result).toBe(true)
     })
@@ -366,9 +361,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given sufficient fuel for travel, When checking if refueling is needed, Then it should return false', () => {
       const currentFuel = 5
       const travelTime = 3
-      const autonomy = 10
 
-      const result = needsRefueling(currentFuel, travelTime, autonomy)
+      const result = needsRefueling(currentFuel, travelTime)
 
       expect(result).toBe(false)
     })
@@ -376,9 +370,8 @@ describe('Pathfinding Algorithm', () => {
     it('Given fuel equals travel time, When checking if refueling is needed, Then it should return false', () => {
       const currentFuel = 10
       const travelTime = 10
-      const autonomy = 10
 
-      const result = needsRefueling(currentFuel, travelTime, autonomy)
+      const result = needsRefueling(currentFuel, travelTime)
 
       expect(result).toBe(false)
     })

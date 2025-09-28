@@ -41,20 +41,12 @@ export const getDestinations = (
 }
 
 // Pure function to calculate fuel after travel
-export const calculateFuelAfterTravel = (
-  currentFuel: number,
-  travelTime: number,
-  _autonomy: number
-): number => {
+export const calculateFuelAfterTravel = (currentFuel: number, travelTime: number): number => {
   return Math.max(0, currentFuel - travelTime)
 }
 
 // Pure function to check if refueling is needed
-export const needsRefueling = (
-  currentFuel: number,
-  travelTime: number,
-  _autonomy: number
-): boolean => {
+export const needsRefueling = (currentFuel: number, travelTime: number): boolean => {
   return currentFuel < travelTime
 }
 
@@ -78,7 +70,7 @@ export const travelToPlanet = (
   travelTime: number,
   autonomy: number
 ): PathNode => {
-  const needsRefuel = needsRefueling(currentNode.fuelRemaining, travelTime, autonomy)
+  const needsRefuel = needsRefueling(currentNode.fuelRemaining, travelTime)
 
   // If travel time exceeds autonomy, we can't make this trip even with refueling
   if (travelTime > autonomy) {
