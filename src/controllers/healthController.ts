@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { getHealthStatus, getReadinessStatus } from '../services/healthService'
 import { logger } from '../utils/logger'
 
-export const healthCheck = async (req: Request, res: Response): Promise<void> => {
+export const healthCheck = (req: Request, res: Response): void => {
   try {
     const healthData = getHealthStatus(req.ip, req.get('User-Agent'))
     logger.info('Health check requested', { ip: req.ip, userAgent: req.get('User-Agent') })
@@ -18,7 +18,7 @@ export const healthCheck = async (req: Request, res: Response): Promise<void> =>
   }
 }
 
-export const readinessCheck = async (_req: Request, res: Response): Promise<void> => {
+export const readinessCheck = (_req: Request, res: Response): void => {
   try {
     const readinessData = getReadinessStatus()
     res.status(200).json(readinessData)
