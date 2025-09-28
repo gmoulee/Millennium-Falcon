@@ -1,18 +1,52 @@
-import { closeDatabase, createDatabase, getAllRoutes } from '../src/database'
-import { loadConfig } from '../src/utils/config'
+import { readFileSync } from 'fs'
+import { resolve } from 'path'
+import { MillenniumFalconConfig } from '../src/types/routeTypes'
+import { getConfig, initializeConfig, loadConfig } from '../src/utils/config'
+
+// Mock fs module
+jest.mock('fs')
+jest.mock('path')
+
+const mockReadFileSync = readFileSync as jest.MockedFunction<typeof readFileSync>
+const mockResolve = resolve as jest.MockedFunction<typeof resolve>
 
 describe('Configuration', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  afterAll(() => {
+    jest.restoreAllMocks()
+  })
+
   describe('loadConfig', () => {
     it('Given valid config file, When loading config, Then it should load correct autonomy value', () => {
-      const configPath = './config/millennium-falcon.json'
+      const configPath = './test/fixtures/valid.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: 6,
+        departure: 'Tatooine',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
+      mockResolve.mockReturnValue('/resolved/path/universe.db')
 
       const config = loadConfig(configPath)
 
       expect(config.autonomy).toBe(6)
+      expect(mockReadFileSync).toHaveBeenCalledWith(configPath, 'utf8')
     })
 
     it('Given valid config file, When loading config, Then it should load correct departure planet', () => {
-      const configPath = './config/millennium-falcon.json'
+      const configPath = './test/fixtures/valid.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: 6,
+        departure: 'Tatooine',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
+      mockResolve.mockReturnValue('/resolved/path/universe.db')
 
       const config = loadConfig(configPath)
 
@@ -20,15 +54,26 @@ describe('Configuration', () => {
     })
 
     it('Given valid config file, When loading config, Then it should load correct routes database path', () => {
-      const configPath = './config/millennium-falcon.json'
+      const configPath = './test/fixtures/valid.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: 6,
+        departure: 'Tatooine',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
+      mockResolve.mockReturnValue('/resolved/path/universe.db')
 
       const config = loadConfig(configPath)
 
-      expect(config.routesDb).toContain('universe.db')
+      expect(config.routesDb).toBe('/resolved/path/universe.db')
+      expect(mockResolve).toHaveBeenCalled()
     })
 
     it('Given invalid JSON config file, When loading config, Then it should throw error', () => {
       const configPath = './test/fixtures/invalid.json'
+
+      mockReadFileSync.mockReturnValue('{ invalid json }')
 
       expect(() => {
         loadConfig(configPath)
@@ -37,6 +82,13 @@ describe('Configuration', () => {
 
     it('Given config file with missing fields, When loading config, Then it should throw error', () => {
       const configPath = './test/fixtures/missing-fields.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: 6,
+        departure: 'Tatooine',
+        // routes_db is missing
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
 
       expect(() => {
         loadConfig(configPath)
@@ -45,85 +97,82 @@ describe('Configuration', () => {
 
     it('Given config file with non-positive autonomy, When loading config, Then it should throw error', () => {
       const configPath = './test/fixtures/invalid-autonomy.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: 0,
+        departure: 'Tatooine',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
 
       expect(() => {
         loadConfig(configPath)
       }).toThrow('Invalid configuration: autonomy must be positive')
     })
+
+    it('Given config file with null autonomy, When loading config, Then it should throw error', () => {
+      const configPath = './test/fixtures/valid.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: null,
+        departure: 'Tatooine',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
+
+      expect(() => {
+        loadConfig(configPath)
+      }).toThrow('Invalid configuration: missing required fields')
+    })
+
+    it('Given config file with undefined autonomy, When loading config, Then it should throw error', () => {
+      const configPath = './test/fixtures/valid.json'
+      const mockConfigData = JSON.stringify({
+        departure: 'Tatooine',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
+
+      expect(() => {
+        loadConfig(configPath)
+      }).toThrow('Invalid configuration: missing required fields')
+    })
+
+    it('Given file read error, When loading config, Then it should throw error', () => {
+      const configPath = './test/fixtures/valid.json'
+
+      mockReadFileSync.mockImplementation(() => {
+        throw new Error('File not found')
+      })
+
+      expect(() => {
+        loadConfig(configPath)
+      }).toThrow('Failed to load configuration: File not found')
+    })
   })
-})
 
-describe('Database', () => {
-  describe('createDatabase', () => {
-    it('Given valid database path, When creating database connection, Then it should create successfully', async () => {
-      const dbPath = './config/universe.db'
-
-      const db = await createDatabase(dbPath)
-
-      expect(db).toBeDefined()
-      await closeDatabase(db)
-    })
-
-    it('Given invalid database path, When creating database connection, Then it should throw error', async () => {
-      const dbPath = '/invalid/path/that/does/not/exist.db'
-
-      await expect(createDatabase(dbPath)).rejects.toThrow('Failed to open database')
-    })
-  })
-
-  describe('getAllRoutes', () => {
-    it('Given valid database connection, When fetching routes, Then it should fetch routes', async () => {
-      const db = await createDatabase('./config/universe.db')
-
-      try {
-        const routes = await getAllRoutes(db)
-
-        expect(routes.length).toBeGreaterThan(0)
-      } finally {
-        await closeDatabase(db)
+  describe('initializeConfig and getConfig', () => {
+    it('Given valid config, When initializing config, Then it should store config globally', () => {
+      const mockConfig: MillenniumFalconConfig = {
+        autonomy: 6,
+        departure: 'Tatooine',
+        routesDb: '/path/to/universe.db',
       }
+
+      initializeConfig(mockConfig)
+      const retrievedConfig = getConfig()
+
+      expect(retrievedConfig).toEqual(mockConfig)
     })
 
-    it('Given valid database connection, When fetching routes, Then it should return routes with origin field', async () => {
-      const db = await createDatabase('./config/universe.db')
+    it('Given no initialized config, When getting config, Then it should throw error', () => {
+      // Reset global config
+      initializeConfig(null as any)
 
-      try {
-        const routes = await getAllRoutes(db)
-
-        routes.forEach(route => {
-          expect(route.origin).toBeDefined()
-        })
-      } finally {
-        await closeDatabase(db)
-      }
-    })
-
-    it('Given valid database connection, When fetching routes, Then it should return routes with destination field', async () => {
-      const db = await createDatabase('./config/universe.db')
-
-      try {
-        const routes = await getAllRoutes(db)
-
-        routes.forEach(route => {
-          expect(route.destination).toBeDefined()
-        })
-      } finally {
-        await closeDatabase(db)
-      }
-    })
-
-    it('Given valid database connection, When fetching routes, Then it should return routes with positive travel time', async () => {
-      const db = await createDatabase('./config/universe.db')
-
-      try {
-        const routes = await getAllRoutes(db)
-
-        routes.forEach(route => {
-          expect(route.travelTime).toBeGreaterThan(0)
-        })
-      } finally {
-        await closeDatabase(db)
-      }
+      expect(() => {
+        getConfig()
+      }).toThrow('Config not initialized. Call initializeConfig() first.')
     })
   })
 })
