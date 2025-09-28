@@ -10,7 +10,7 @@ import { loadRoutes } from './utils/routeCache'
 // Load environment variables
 dotenv.config()
 
-const PORT = process.env['PORT'] || 3000
+const PORT = process.env['PORT'] || 3001
 const CONFIG_PATH = process.env['CONFIG_PATH'] || './config/millennium-falcon.json'
 
 const startServer = async (): Promise<void> => {

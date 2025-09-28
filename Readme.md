@@ -5,13 +5,13 @@
 ### Prerequisites
 
 - Docker installed on your laptop
-- Port 3000 available
+- Port 3001 available
 
 ### Option A: Use Pre-built Docker Image (Fastest) ⚡
 
 ```bash
 # Run directly from Docker Hub
-docker run -p 3000:3000 moulee23/millennium-falcon-backend
+docker run -p 3001:3001 moulee23/millennium-falcon-backend
 ```
 
 ### Option B: Build from Source 🔨
@@ -32,20 +32,20 @@ docker run -p 3000:3000 moulee23/millennium-falcon-backend
 3. **Run the container:**
 
    ```bash
-   docker run -p 3000:3000 millennium-falcon-backend
+   docker run -p 3001:3001 millennium-falcon-backend
    ```
 
 ### Test the API 🧪
 
 ```bash
 # Health check
-curl http://localhost:3000/health
+curl http://localhost:3001/health
 
 # Readiness check
-curl http://localhost:3000/ready
+curl http://localhost:3001/ready
 
 # Route computation
-curl -X POST http://localhost:3000/compute \
+curl -X POST http://localhost:3001/compute \
   -H "Content-Type: application/json" \
   -d '{"arrival": "Endor"}'
 ```
@@ -54,8 +54,8 @@ curl -X POST http://localhost:3000/compute \
 
 Interactive API documentation is available at:
 
-- **Swagger UI**: http://localhost:3000/api-docs
-- **OpenAPI JSON**: http://localhost:3000/api-docs.json
+- **Swagger UI**: http://localhost:3001/api-docs
+- **OpenAPI JSON**: http://localhost:3001/api-docs.json
 
 ## API Endpoints
 
