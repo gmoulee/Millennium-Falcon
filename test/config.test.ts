@@ -92,7 +92,7 @@ describe('Configuration', () => {
 
       expect(() => {
         loadConfig(configPath)
-      }).toThrow('Invalid configuration: missing required fields')
+      }).toThrow('Invalid configuration: missing required field "routes_db"')
     })
 
     it('Given config file with non-positive autonomy, When loading config, Then it should throw error', () => {
@@ -107,7 +107,7 @@ describe('Configuration', () => {
 
       expect(() => {
         loadConfig(configPath)
-      }).toThrow('Invalid configuration: autonomy must be positive')
+      }).toThrow('Invalid configuration: "autonomy" must be positive')
     })
 
     it('Given config file with null autonomy, When loading config, Then it should throw error', () => {
@@ -122,7 +122,7 @@ describe('Configuration', () => {
 
       expect(() => {
         loadConfig(configPath)
-      }).toThrow('Invalid configuration: missing required fields')
+      }).toThrow('Invalid configuration: missing required field "autonomy"')
     })
 
     it('Given config file with undefined autonomy, When loading config, Then it should throw error', () => {
@@ -136,7 +136,22 @@ describe('Configuration', () => {
 
       expect(() => {
         loadConfig(configPath)
-      }).toThrow('Invalid configuration: missing required fields')
+      }).toThrow('Invalid configuration: missing required field "autonomy"')
+    })
+
+    it('Given config file with empty departure, When loading config, Then it should throw error', () => {
+      const configPath = './test/fixtures/valid.json'
+      const mockConfigData = JSON.stringify({
+        autonomy: 6,
+        departure: '',
+        routes_db: 'universe.db',
+      })
+
+      mockReadFileSync.mockReturnValue(mockConfigData)
+
+      expect(() => {
+        loadConfig(configPath)
+      }).toThrow('Invalid configuration: "departure" cannot be empty')
     })
 
     it('Given file read error, When loading config, Then it should throw error', () => {

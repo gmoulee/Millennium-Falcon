@@ -14,17 +14,43 @@ export const loadConfig = (configPath: string): MillenniumFalconConfig => {
       routes_db: string
     }
 
-    if (
-      config.autonomy === undefined ||
-      config.autonomy === null ||
-      !config.departure ||
-      !config.routes_db
-    ) {
-      throw new Error('Invalid configuration: missing required fields')
+    // Validate autonomy field
+    if (config.autonomy === undefined || config.autonomy === null) {
+      throw new Error('Invalid configuration: missing required field "autonomy"')
+    }
+
+    if (typeof config.autonomy !== 'number') {
+      throw new Error('Invalid configuration: "autonomy" must be a number')
     }
 
     if (config.autonomy <= 0) {
-      throw new Error('Invalid configuration: autonomy must be positive')
+      throw new Error('Invalid configuration: "autonomy" must be positive')
+    }
+
+    // Validate departure field
+    if (config.departure === undefined || config.departure === null) {
+      throw new Error('Invalid configuration: missing required field "departure"')
+    }
+
+    if (typeof config.departure !== 'string') {
+      throw new Error('Invalid configuration: "departure" must be a string')
+    }
+
+    if (config.departure.trim() === '') {
+      throw new Error('Invalid configuration: "departure" cannot be empty')
+    }
+
+    // Validate routes_db field
+    if (config.routes_db === undefined || config.routes_db === null) {
+      throw new Error('Invalid configuration: missing required field "routes_db"')
+    }
+
+    if (typeof config.routes_db !== 'string') {
+      throw new Error('Invalid configuration: "routes_db" must be a string')
+    }
+
+    if (config.routes_db.trim() === '') {
+      throw new Error('Invalid configuration: "routes_db" cannot be empty')
     }
 
     // Resolve the database path relative to the config file
