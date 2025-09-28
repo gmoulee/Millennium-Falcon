@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs'
 import { resolve } from 'path'
+
 import { MillenniumFalconConfig } from '../types/routeTypes'
 
 // Global config cache

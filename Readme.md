@@ -41,22 +41,44 @@ docker run -p 3000:3000 moulee23/millennium-falcon-backend
 # Health check
 curl http://localhost:3000/health
 
+# Readiness check
+curl http://localhost:3000/ready
+
 # Route computation
 curl -X POST http://localhost:3000/compute \
   -H "Content-Type: application/json" \
   -d '{"arrival": "Endor"}'
 ```
 
+## API Documentation 📚
+
+Interactive API documentation is available at:
+
+- **Swagger UI**: http://localhost:3000/api-docs
+- **OpenAPI JSON**: http://localhost:3000/api-docs.json
+
 ## API Endpoints
 
+### Health Endpoints
+
 - `GET /health` - Health check endpoint
+  - Returns service status, uptime, memory usage, and system information
+- `GET /ready` - Readiness check endpoint
+  - Returns service readiness status
+
+### Route Endpoints
+
 - `POST /compute` - Route computation
-  - Request: `{"arrival": "Endor"}`
-  - Response: `{"duration": 8, "route": ["Tatooine", "Hoth", "Endor"]}`
+  - **Request**: `{"arrival": "Endor"}`
+  - **Response**: `{"duration": 8, "route": ["Tatooine", "Hoth", "Endor"]}`
+  - **Error Responses**:
+    - `400` - Bad Request (invalid input)
+    - `404` - Not Found (no route available)
+    - `500` - Internal Server Error
 
 ## Available Planets
 
-- Tatooine (departure)
-- Dagobah
-- Endor
-- Hoth
+- **Tatooine** (departure planet)
+- **Dagobah**
+- **Endor**
+- **Hoth**

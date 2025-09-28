@@ -1,4 +1,5 @@
 import { Router } from 'express'
+
 import { healthCheck, readinessCheck } from '../controllers/healthController'
 
 export const createHealthRouter = (): Router => {

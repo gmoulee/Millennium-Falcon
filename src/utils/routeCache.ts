@@ -31,9 +31,12 @@ export const loadRoutes = async (config: MillenniumFalconConfig): Promise<void> 
     return
   }
 
-  logger.info('Loading routes from database', {
-    databasePath: config.routesDb,
-  })
+  logger.info(
+    {
+      databasePath: config.routesDb,
+    },
+    'Loading routes from database'
+  )
 
   const db = await createDatabase(config.routesDb)
 
@@ -47,9 +50,12 @@ export const loadRoutes = async (config: MillenniumFalconConfig): Promise<void> 
     // Create and cache the route map
     cachedRouteMap = createRouteMap(cachedRoutes)
 
-    logger.info('Routes loaded successfully', {
-      routeCount: cachedRoutes.length,
-    })
+    logger.info(
+      {
+        routeCount: cachedRoutes.length,
+      },
+      'Routes loaded successfully'
+    )
 
     isLoaded = true
   } finally {

@@ -3,10 +3,12 @@ import cors from 'cors'
 import express, { Application } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
+
 import { createHealthRouter } from './routes/healthRouter'
 import { createRouteRouter } from './routes/routeRouter'
 import { requestLogger } from './utils/logger'
 import { errorHandler, notFoundHandler } from './utils/middleware'
+import { setupSwagger } from './utils/swagger'
 
 export const createApp = (): Application => {
   const app = express()
@@ -35,6 +37,9 @@ export const createApp = (): Application => {
   // Body parsing middleware
   app.use(express.json({ limit: '10mb' }))
   app.use(express.urlencoded({ extended: true, limit: '10mb' }))
+
+  // API Documentation
+  setupSwagger(app)
 
   // Health check endpoints
   app.use(createHealthRouter())

@@ -1,4 +1,5 @@
 import { Database, open } from 'sqlite'
+
 import { Route } from '../types/routeTypes'
 
 export const createDatabase = async (dbPath: string): Promise<Database> => {
@@ -17,7 +18,7 @@ export const createDatabase = async (dbPath: string): Promise<Database> => {
 export const getAllRoutes = async (db: Database): Promise<readonly Route[]> => {
   try {
     const query = 'SELECT origin, destination, travel_time as travelTime FROM routes'
-    const rows = (await db.all(query)) as Route[]
+    const rows = await db.all(query)
 
     return rows
   } catch (err) {

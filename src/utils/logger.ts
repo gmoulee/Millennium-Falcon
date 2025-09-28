@@ -1,79 +1,32 @@
 import { NextFunction, Request, Response } from 'express'
+import pino from 'pino'
 
-export interface LogEntry {
-  readonly timestamp: string
-  readonly level: 'info' | 'warn' | 'error' | 'debug'
-  readonly message: string
-  readonly metadata?: Record<string, unknown>
+// Create Pino logger instance
+const loggerOptions: pino.LoggerOptions = {
+  level: process.env['LOG_LEVEL'] || 'info',
+  base: {
+    service: 'millennium-falcon-api',
+    version: process.env['npm_package_version'] || '1.0.0',
+  },
+  timestamp: pino.stdTimeFunctions.isoTime,
 }
 
-export class Logger {
-  private static instance: Logger
-  private readonly logLevel: string
-
-  private constructor() {
-    this.logLevel = process.env['LOG_LEVEL'] || 'info'
-  }
-
-  public static getInstance(): Logger {
-    if (!Logger.instance) {
-      Logger.instance = new Logger()
-    }
-    return Logger.instance
-  }
-
-  private shouldLog(level: string): boolean {
-    const levels = ['error', 'warn', 'info', 'debug']
-    const currentLevelIndex = levels.indexOf(this.logLevel)
-    const messageLevelIndex = levels.indexOf(level)
-    return messageLevelIndex <= currentLevelIndex
-  }
-
-  private formatLog(level: string, message: string, metadata?: Record<string, unknown>): LogEntry {
-    const logEntry: LogEntry = {
-      timestamp: new Date().toISOString(),
-      level: level as LogEntry['level'],
-      message,
-    }
-
-    if (metadata) {
-      return { ...logEntry, metadata }
-    }
-
-    return logEntry
-  }
-
-  public info(message: string, metadata?: Record<string, unknown>): void {
-    if (this.shouldLog('info')) {
-      const logEntry = this.formatLog('info', message, metadata)
-      console.log(JSON.stringify(logEntry))
-    }
-  }
-
-  public warn(message: string, metadata?: Record<string, unknown>): void {
-    if (this.shouldLog('warn')) {
-      const logEntry = this.formatLog('warn', message, metadata)
-      console.warn(JSON.stringify(logEntry))
-    }
-  }
-
-  public error(message: string, metadata?: Record<string, unknown>): void {
-    if (this.shouldLog('error')) {
-      const logEntry = this.formatLog('error', message, metadata)
-      console.error(JSON.stringify(logEntry))
-    }
-  }
-
-  public debug(message: string, metadata?: Record<string, unknown>): void {
-    if (this.shouldLog('debug')) {
-      const logEntry = this.formatLog('debug', message, metadata)
-      console.debug(JSON.stringify(logEntry))
-    }
+if (process.env['NODE_ENV'] === 'development') {
+  loggerOptions.transport = {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+      translateTime: 'SYS:standard',
+      ignore: 'pid,hostname,service,version',
+      messageFormat: '{msg}',
+      singleLine: false,
+    },
   }
 }
 
-export const logger = Logger.getInstance()
+export const logger = pino(loggerOptions)
 
+// Request logging middleware using pino-http
 export const requestLogger = (req: Request, res: Response, next: NextFunction): void => {
   const startTime = Date.now()
 
@@ -89,9 +42,9 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
     }
 
     if (res.statusCode >= 400) {
-      logger.warn('HTTP Request', logData)
+      logger.warn(logData, 'HTTP Request')
     } else {
-      logger.info('HTTP Request', logData)
+      logger.info(logData, 'HTTP Request')
     }
   })
 

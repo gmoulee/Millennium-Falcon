@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+
 import { ComputeRequest } from '../types/routeTypes'
 import { logger } from './logger'
 import { getRouteMap } from './routeCache'
@@ -73,17 +74,21 @@ export const validateDeparture = (departure: string): void => {
     )
   }
 
-  logger.info('Departure planet validation successful', {
-    departure,
-    totalPlanets: routeMap.size,
-    availablePlanets: Array.from(routeMap.keys()),
-  })
+  logger.info(
+    {
+      departure,
+      totalPlanets: routeMap.size,
+      availablePlanets: Array.from(routeMap.keys()),
+    },
+    'Departure planet validation successful'
+  )
 }
 
 export const errorHandler = (
   error: AppError,
   _req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ): void => {
   const { statusCode = 500, message } = error
