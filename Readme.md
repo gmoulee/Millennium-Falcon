@@ -7,21 +7,28 @@
 - Docker installed on your laptop
 - Port 3000 available
 
-### Build and Run
+### Setup and Run
 
-1. **Build the Docker image:**
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/gmoulee/Millennium-Falcon.git
+   cd Millennium-Falcon
+   ```
+
+2. **Build the Docker image:**
 
    ```bash
    docker build -t millennium-falcon-backend .
    ```
 
-2. **Run the container:**
+3. **Run the container:**
 
    ```bash
    docker run -p 3000:3000 millennium-falcon-backend
    ```
 
-3. **Test the API:**
+4. **Test the API:**
 
    ```bash
    # Health check
